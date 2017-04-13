@@ -1,4 +1,6 @@
-# class for handling installing/uninstalling packages 
+#
+# Class for handling installing/uninstalling packages 
+#
 
 from execute import *
 
@@ -12,6 +14,7 @@ class package:
 			# check if package is installed
 			cmd = "ssh root@%s dpkg -s %s" % (server, self.name)
 			(returnCode, output) = execute(cmd, printOutput=False)
+			# dpkg returns zero if package is installed.  non-zero otherwise
 			if returnCode == 0:
 				print "%s is already installed on %s" % (self.name, server)
 			else:

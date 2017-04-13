@@ -1,5 +1,0 @@
-machine:
-  ip: 34.203.199.226
-  user: root
-  password: foobarbaz
-  service: apache

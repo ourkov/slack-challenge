@@ -12,7 +12,8 @@ def execute(cmd, printOnly=False, printOutput=True):
         output = process.communicate()
         returnCode = process.wait()
 	outputStr = ''
-	if output[0]: # FIXME  sloppy
+	# join stdout and stderr
+	if output[0]: 
 		outputStr += output[0]
 	if output[1]:
 		outputStr += output[1]

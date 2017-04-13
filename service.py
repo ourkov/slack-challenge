@@ -1,12 +1,19 @@
+#
+# Class for handling starting/stopping/restarting of services
+# A state (ie. running or stopped) or an action may be specified
+# Services may subscribe to changes in artifact or package configs
+# In the event of a subscribed state change, service is restarted
+#
+
 import sys
 from execute import *
 
 class service:
+
 	name = None
 	action = None
 	state = None
 	servers = None
-	subscribedTo = None
 
 	def __init__(self, serviceInfo, servers, changeMgr):
 		print '=' * 76
@@ -36,10 +43,7 @@ class service:
 		elif self.state == "stopped":
 			self.verifyStopped()
 		if subscribe:
-			if self.name not in changeMgr.subscribers:
-				changeMgr.subscribers[self.name] = { "watching" : attributes["subscribe"]["name"], \
-								     "type" :     attributes["subscribe"]["type"], \
-								     "servers" :  servers }
+			changeMgr.registerSubscriber(self.name, attributes, servers)
 
 	def restart(self):
 		print "restarting %s service..." % self.name

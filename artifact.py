@@ -1,3 +1,9 @@
+#
+# Class for handling the copying of files to remote servers
+#
+# Will only copy if remote file does not exist or if sha1 hash
+# does not match.  Has methods for changing owner and mode.  
+#
 
 import hashlib
 import os
@@ -5,6 +11,7 @@ import sys
 from execute import *
 
 class artifact:
+
 	source = None
 	destination = None
 	mode = None
@@ -64,14 +71,11 @@ class artifact:
 		print "Local sha: %s" % localSha
 		print "Remote sha: %s" % remoteSha
 		if localSha != remoteSha:
-			print "Shas do NOT match"
 			return True
 		else:
-			print "Shas match"
 			return False
 
 	def copyArtifact(self, changeMgr):
-		print "In copy artifact method"
         	for server in self.servers:
 			if self.isOutOfDate(server):	            
 				changeMgr.registerStateChange("artifact", self.destination, server)

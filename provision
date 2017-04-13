@@ -42,6 +42,10 @@ def printError(msg):
 		return
 	sys.exit(1)
 
+# For each config item, create an object of that type
+# Each object should know how to process configuration settings
+# As changes are applied to servers, changeMgr object is updated
+# If services are subscribed to those changes, that service is restarted
 def processConfigItem(item):
 	for type in item:
 		print "config type : %s" % type	
@@ -66,6 +70,7 @@ def processConfigItem(item):
 							service(config, [server], changeMgr)
 							changeMgr.subscribers[serviceName]['servers'].remove(server)
 
+# Read in yaml config file and create a data map
 def loadConfig(config):
 	if not os.path.isfile(config):
 		printError("No such file : %s" % config)
@@ -73,6 +78,7 @@ def loadConfig(config):
 	yamlFile = open(config, 'r')
 	return yaml.safe_load(yamlFile)
 
+# Main entry point
 if __name__ == '__main__':
 	parseCommandLine()
 	configMap = loadConfig(args.config)
