@@ -23,5 +23,5 @@
     name: apache2
     state: running
     subscribe: 
-        type: artifact
-        name: '/var/www/html/index.php'
+        type: package
+        name: php5-common
