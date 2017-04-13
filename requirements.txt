@@ -1,0 +1,22 @@
+Requirements for your rudimentary configuration management tool:
+
+* If your tool has dependencies not available on a standard Ubuntu instance you may include a bootstrap.sh program to resolve them
+* Your tool must provide an abstraction that allows specifying a file's content and metadata
+* Your tool must provide an abstraction that allows installing and removing Debian packages
+* Your tool must provide some mechanism for restarting a service when relevant files or packages are updated
+* Your tool must be idempotent - it must be safe to apply your configuration over and over again
+* Don't forget to document the basic architecture of your tool, how to install it, how to write configurations, and how to invoke them
+
+Requirements for the configuration your tool will execute:
+
+* Your configuration must specify a web server capable of running the PHP application below
+* All three servers must respond 200 OK and include the string "Hello, world!" in their response to requests from `curl -sv "http://ADDRESS"` (using the public IP address)
+* For the purposes of this challenge, please do not reboot any of the provided servers
+
+Here is the PHP application in question:
+
+    <?php
+    header("Content-Type: text/plain");
+    echo "Hello, world!\n";
+
+Your servers for part one are 34.203.199.226 and 54.198.214.128. They are accessible via SSH and their root password is "foobarbaz". When your tool and configuration are able to configure these two servers and you've verified they respond appropriately please tar up your code, configuration, and Git/Mercurial/other history and reply-all to this email to move on to part two.

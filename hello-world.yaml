@@ -1,0 +1,27 @@
+
+- package:
+    name: apache2
+    action: install
+
+- package:
+    name: php5-common
+    action: install
+
+- package:
+    name: libapache2-mod-php5
+    action: install
+
+- package:
+    name: php5-cli
+    action: install
+
+- artifact:
+    source: index.php
+    destination: /var/www/html/
+
+- service:
+    name: apache2
+    state: running
+    subscribe: 
+        type: artifact
+        name: '/var/www/html/index.php'

@@ -1,0 +1,82 @@
+#!/usr/bin/env python
+#
+# Configuration management tool
+#
+# copy files 
+# install/uninstall packages
+# start/stop/restart services
+#
+# It is assumed that the machine running this utility has ssh access to 
+# remote servers as root user. 
+#
+# Requires having PyYaml installed.  Run bootstrab.sh to install
+#
+
+import argparse
+import os
+import sys
+import yaml
+
+from artifact import *
+from package import *
+from service import *
+from change_manager import *
+
+# global change manager object
+changeMgr = stateChangeManager()
+
+def parseCommandLine():
+	global args
+	parser = argparse.ArgumentParser()
+	parser.add_argument("-c", "--config", help="path to config file", default="config.yaml")
+	parser.add_argument("-s", "--servers", help="IPs of servers", default=[], nargs="*")
+	parser.add_argument("-k", "--keep_going", help="continue on errors", default=False,
+		    action="store_true")
+	args = parser.parse_args()
+	if not args.servers:
+		printError("Need to specify a server to apply config to")
+
+def printError(msg):
+	sys.stderr.writelines("Error: " + msg)
+	if args.keep_going:
+		return
+	sys.exit(1)
+
+def processConfigItem(item):
+	for type in item:
+		print "config type : %s" % type	
+		if type == 'package':
+			package(item, args.servers, changeMgr)
+		elif type == 'service':
+			service(item, args.servers, changeMgr)
+		elif type == 'artifact':
+			artifact(item, args.servers, changeMgr)
+		else:
+			printError("Undefined config type \"%s\"" % type)
+	# if an item changes state, check if a subscribed service requires a restart	
+	if len(changeMgr.changedState) and len(changeMgr.subscribers):
+		for changedState in changeMgr.changedState:
+			for serviceName in changeMgr.subscribers:
+				if changedState == changeMgr.subscribers[serviceName]["watching"]:
+					print "%s changed state and %s is watching.  Restart required" % (changedState, serviceName)
+					config = { 'service' : { 'name' : serviceName, 'action' : 'restart' }}
+					for server in changeMgr.changedState[changedState]['servers']:
+						if server in changeMgr.subscribers[serviceName]['servers']:
+							print "restarting %s on %s" % (serviceName, server)
+							service(config, [server], changeMgr)
+							changeMgr.subscribers[serviceName]['servers'].remove(server)
+
+def loadConfig(config):
+	if not os.path.isfile(config):
+		printError("No such file : %s" % config)
+	print "loading %s..." % config
+	yamlFile = open(config, 'r')
+	return yaml.safe_load(yamlFile)
+
+if __name__ == '__main__':
+	parseCommandLine()
+	configMap = loadConfig(args.config)
+        for config in configMap:	
+                print "config: %s" % config
+                processConfigItem(config)
+
