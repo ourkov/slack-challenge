@@ -82,7 +82,7 @@ def loadConfig(config):
 if __name__ == '__main__':
 	parseCommandLine()
 	configMap = loadConfig(args.config)
-        for config in configMap:	
-                print "config: %s" % config
-                processConfigItem(config)
+	for config in configMap:	
+		print "config: %s" % config
+		processConfigItem(config)
 

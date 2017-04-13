@@ -32,6 +32,8 @@ class service:
 		if not self.name:
 			sys.stderr.writelines("Error: service object requires name")
 			sys.exit(1)		
+		if not self.action and not self.state:
+			self.state = "running" # default to running
 		if self.action == "restart":
 			self.restart()
 		elif self.action == "start":
@@ -51,17 +53,17 @@ class service:
 			cmd = "ssh root@%s service %s restart" % (server, self.name)
 			execute(cmd)
 
-        def start(self):
-                print "starting %s service..." % self.name
+	def start(self):
+		print "starting %s service..." % self.name
 		for server in self.servers:
-                        cmd = "ssh root@%s service %s start" % (server, self.name)
-                        execute(cmd)
+			cmd = "ssh root@%s service %s start" % (server, self.name)
+			execute(cmd)
 
-        def stop(self):
-                print "stopping %s service..." % self.name
+	def stop(self):
+		print "stopping %s service..." % self.name
 		for server in self.servers:
-                        cmd = "ssh root@%s service %s stop" % (server, self.name)
-                        execute(cmd)
+			cmd = "ssh root@%s service %s stop" % (server, self.name)
+			execute(cmd)
 
 	def verifyRunning(self):
 		for server in self.servers:
