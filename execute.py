@@ -23,3 +23,4 @@ def execute(cmd, printOnly=False, printOutput=True):
 		return returnCode, outputStr
 	except:
 		return 1, "Failed to execute: %s" % cmd
+

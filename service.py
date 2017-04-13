@@ -87,3 +87,4 @@ class service:
 				cmd = "ssh root@%s service stop"
 				execute(cmd)
 
+
