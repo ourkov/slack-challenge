@@ -7,7 +7,7 @@ def execute(cmd, printOnly=False, printOutput=True):
 	try:
 		print "Executing: %s" % cmd
 		if printOnly:
-			return 0, "In print only mode.  No output.
+			return 0, "In print only mode.  No output."
 		process = Popen(cmd.split(), stderr=STDOUT, stdout=PIPE)
 		output = process.communicate()
 		returnCode = process.wait()

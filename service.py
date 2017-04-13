@@ -68,7 +68,7 @@ class service:
 	def verifyRunning(self):
 		for server in self.servers:
 			print "verifying that %s is running on %s" % (self.name, server)
-			cmd = "ssh root@%s service %s status"
+			cmd = "ssh root@%s service %s status" % (server, self.name)
 			(returnCode, output) = execute(cmd)
 			# status returns zero if running, non-zero if not
 			if returnCode:
@@ -79,7 +79,7 @@ class service:
 	def verifyStopped(self):
 		for server in self.servers:
 			print "verifying that %s is stopped on %s" % (self.name, server)
-			cmd = "ssh root@%s service %s status"
+			cmd = "ssh root@%s service %s status" % (server, self.name)
 			(returnCode, output) = execute(cmd)
 			# status returns zero if running, non-zero if not
 			if not returnCode:
